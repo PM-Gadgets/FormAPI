@@ -8,11 +8,10 @@ use JetBrains\PhpStorm\ArrayShape;
 use pocketmine\player\Player;
 use pocketmine\Server;
 
-class Button extends Element implements Translatable {
+class Button extends LabeledElement implements Translatable {
 
     private string $translationKey;
     private string $fallbackText;
-    private ?string $label;
     private Image $image;
 
     public function __construct(string $translationKey, ?string $label = null, Image $image = null, string $fallbackText = "") {
