@@ -2,7 +2,6 @@
 
 namespace Cosmic5173\FormAPI;
 
-use Cosmic5173\FormAPI\elements\Content;
 use Cosmic5173\FormAPI\elements\CustomFormElement;
 use Cosmic5173\FormAPI\elements\Dropdown;
 use Cosmic5173\FormAPI\elements\Input;
@@ -11,7 +10,9 @@ use Cosmic5173\FormAPI\elements\Slider;
 use Cosmic5173\FormAPI\elements\StepSlider;
 use Cosmic5173\FormAPI\elements\Title;
 use Cosmic5173\FormAPI\elements\Toggle;
+use Cosmic5173\MultiLanguage\language\Language;
 use pocketmine\form\FormValidationException;
+use pocketmine\player\Player;
 
 class CustomForm extends Form {
 
@@ -27,9 +28,6 @@ class CustomForm extends Form {
      */
     public function __construct(?callable $callable) {
         parent::__construct($callable);
-        $this->data["type"] = "custom_form";
-        $this->data["title"] = "";
-        $this->data["content"] = [];
     }
 
     public function processData(&$data) : void {
@@ -121,5 +119,14 @@ class CustomForm extends Form {
         $this->elements[] = $input;
         $this->labelMap[] = $input->getLabel() ?? count($this->labelMap);
         $this->validationMethods[] = static fn($v) => is_string($v);
+    }
+
+    public function processElements(Player $player, ?Language $language = null): CustomForm {
+        $this->data = [
+            "type" => "custom_form",
+            "title" => $this->title->process($player, $language),
+            "content" => array_merge(...array_map(static fn($element) => $element->process($player, $language), $this->elements))
+        ];
+        return $this;
     }
 }

@@ -5,7 +5,9 @@ namespace Cosmic5173\FormAPI;
 use Cosmic5173\FormAPI\elements\Button;
 use Cosmic5173\FormAPI\elements\Content;
 use Cosmic5173\FormAPI\elements\Title;
+use Cosmic5173\MultiLanguage\language\Language;
 use pocketmine\form\FormValidationException;
+use pocketmine\player\Player;
 
 class SimpleForm extends Form {
 
@@ -21,10 +23,6 @@ class SimpleForm extends Form {
      */
     public function __construct(?callable $callable) {
         parent::__construct($callable);
-        $this->data["type"] = "form";
-        $this->data["title"] = "";
-        $this->data["content"] = "";
-        $this->data["buttons"] = [];
     }
 
     public function processData(&$data) : void {
@@ -78,5 +76,17 @@ class SimpleForm extends Form {
     public function addButton(Button $button) : void {
         $this->buttons[] = $button;
         $this->labelMap[] = $button->getLabel() ?? count($this->labelMap);
+    }
+
+    public function processElements(Player $player, ?Language $language = null): SimpleForm {
+        $this->data = [
+            "type" => "form",
+            "title" => $this->title->process($player, $language),
+            "content" => $this->content->process($player, $language),
+            "buttons" => array_map(static function(Button $button) use ($player, $language) {
+                return $button->process($player, $language);
+            }, $this->buttons)
+        ];
+        return $this;
     }
 }
