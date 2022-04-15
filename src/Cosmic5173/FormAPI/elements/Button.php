@@ -3,7 +3,7 @@
 namespace Cosmic5173\FormAPI\elements;
 
 use Cosmic5173\MultiLanguage\language\Language;
-use Cosmic5173\ScoreboardAPI\utils\TagUtils;
+use Cosmic5173\FormAPI\tag\TagUtils;
 use JetBrains\PhpStorm\ArrayShape;
 use pocketmine\player\Player;
 use pocketmine\Server;
@@ -12,9 +12,9 @@ class Button extends LabeledElement implements Translatable {
 
     private string $translationKey;
     private string $fallbackText;
-    private Image $image;
+    private ?Image $image;
 
-    public function __construct(string $translationKey, ?string $label = null, Image $image = null, string $fallbackText = "") {
+    public function __construct(string $translationKey, ?string $label = null, ?Image $image = null, string $fallbackText = "") {
         $this->translationKey = $translationKey;
         $this->fallbackText = $fallbackText;
         $this->label = $label;

@@ -72,10 +72,12 @@ class SimpleForm extends Form {
 
     /**
      * @param Button $button
+     * @return SimpleForm
      */
-    public function addButton(Button $button) : void {
+    public function addButton(Button $button) : self {
         $this->buttons[] = $button;
         $this->labelMap[] = $button->getLabel() ?? count($this->labelMap);
+        return $this;
     }
 
     public function processElements(Player $player, ?Language $language = null): SimpleForm {

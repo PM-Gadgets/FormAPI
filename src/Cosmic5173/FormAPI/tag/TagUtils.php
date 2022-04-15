@@ -1,9 +1,7 @@
 <?php
 
-namespace Cosmic5173\ScoreboardAPI\utils;
+namespace Cosmic5173\FormAPI\tag;
 
-use Cosmic5173\FormAPI\tag\FormTag;
-use Cosmic5173\FormAPI\tag\TagResolveEvent;
 use pocketmine\player\Player;
 
 class TagUtils {
