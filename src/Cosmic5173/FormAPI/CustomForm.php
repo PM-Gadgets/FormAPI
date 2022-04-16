@@ -23,13 +23,6 @@ class CustomForm extends Form {
     private array $labelMap = [];
     private array $validationMethods = [];
 
-    /**
-     * @param callable|null $callable
-     */
-    public function __construct(?callable $callable) {
-        parent::__construct($callable);
-    }
-
     public function processData(&$data) : void {
         if($data !== null && !is_array($data)) {
             throw new FormValidationException("Expected an array response, got " . gettype($data));
@@ -62,69 +55,83 @@ class CustomForm extends Form {
 
     /**
      * @param Title $title
+     * @return CustomForm
      */
-    public function setTitle(Title $title): void {
+    public function setTitle(Title $title): self {
         $this->title = $title;
+        return $this;
     }
 
     /**
      * @param Label $label
+     * @return CustomForm
      */
-    public function addLabel(Label $label) : void {
+    public function addLabel(Label $label) : self {
         $this->elements[] = $label;
         $this->labelMap[] = $label->getLabel() ?? count($this->labelMap);
         $this->validationMethods[] = static fn($v) => $v === null;
+        return $this;
     }
 
     /**
      * @param Toggle $toggle
+     * @return CustomForm
      */
-    public function addToggle(Toggle $toggle) : void {
+    public function addToggle(Toggle $toggle) : self {
         $this->elements[] = $toggle;
         $this->labelMap[] = $toggle->getLabel() ?? count($this->labelMap);
         $this->validationMethods[] = static fn($v) => is_bool($v);
+        return $this;
     }
 
     /**
      * @param Slider $slider
+     * @return CustomForm
      */
-    public function addSlider(Slider $slider) : void {
+    public function addSlider(Slider $slider) : self {
         $this->elements[] = $slider;
         $this->labelMap[] = $slider->getLabel() ?? count($this->labelMap);
         $this->validationMethods[] = static fn($v) => (is_float($v) || is_int($v)) && $v >= $slider->getMin() && $v <= $slider->getMax();
+        return $this;
     }
 
     /**
      * @param StepSlider $slider
+     * @return CustomForm
      */
-    public function addStepSlider(StepSlider $slider) : void {
+    public function addStepSlider(StepSlider $slider) : self {
         $this->elements[] = $slider;
         $this->labelMap[] = $slider->getLabel() ?? count($this->labelMap);
         $this->validationMethods[] = static fn($v) => is_int($v) && isset($slider->getSteps()[$v]);
+        return $this;
     }
 
     /**
      * @param Dropdown $dropdown
+     * @return CustomForm
      */
-    public function addDropdown(Dropdown $dropdown) : void {
+    public function addDropdown(Dropdown $dropdown) : self {
         $this->elements[] = $dropdown;
         $this->labelMap[] = $dropdown->getLabel() ?? count($this->labelMap);
         $this->validationMethods[] = static fn($v) => is_int($v) && isset($options[$v]);
+        return $this;
     }
 
     /**
      * @param Input $input
+     * @return CustomForm
      */
-    public function addInput(Input $input) : void {
+    public function addInput(Input $input) : self {
         $this->elements[] = $input;
         $this->labelMap[] = $input->getLabel() ?? count($this->labelMap);
         $this->validationMethods[] = static fn($v) => is_string($v);
+        return $this;
     }
 
     public function processElements(Player $player, ?Language $language = null): CustomForm {
         $this->data = [
             "type" => "custom_form",
-            "title" => $this->title->process($player, $language),
+            "title" => $this->title->process($player, $language)["title"],
             "content" => array_merge(...array_map(static fn($element) => $element->process($player, $language), $this->elements))
         ];
         return $this;
