@@ -86,7 +86,7 @@ class Button extends LabeledElement implements Translatable {
             $content["text"] = str_replace($tag, TagUtils::resolveTag($player, $tag)->getValue(), $content["text"]);
         }
 
-        if($this->image !== -1) {
+        if($this->image !== null) {
             $content["image"] = $this->image->process($player, $language);
         }
 
