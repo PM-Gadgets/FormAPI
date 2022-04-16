@@ -17,7 +17,7 @@ abstract class Form implements IForm {
     /**
      * @param callable|null $callable
      */
-    public function __construct(?callable $callable) {
+    public function __construct(?callable $callable = null) {
         $this->callable = $callable;
     }
 

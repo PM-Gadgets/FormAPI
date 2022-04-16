@@ -18,13 +18,6 @@ class SimpleForm extends Form {
 
     private array $labelMap = [];
 
-    /**
-     * @param callable|null $callable
-     */
-    public function __construct(?callable $callable) {
-        parent::__construct($callable);
-    }
-
     public function processData(&$data) : void {
         if($data !== null){
             if(!is_int($data)) {
@@ -80,11 +73,28 @@ class SimpleForm extends Form {
         return $this;
     }
 
+    /**
+     * @param int $index
+     * @param Button $button
+     * @return SimpleForm
+     */
+    public function insertButton(int $index, Button $button): self{
+        if ($index < 0 || $index >= count($this->buttons)) {
+            return $this->addButton($button);
+        }
+        for ($i = count($this->buttons) - 1; $i >= $index; $i--) {
+            $this->buttons[$i + 1] = $this->buttons[$i];
+        }
+
+        $this->buttons[$index] = $button;
+        return $this;
+    }
+
     public function processElements(Player $player, ?Language $language = null): SimpleForm {
         $this->data = [
             "type" => "form",
-            "title" => $this->title->process($player, $language),
-            "content" => $this->content->process($player, $language),
+            "title" => $this->title->process($player, $language)["title"],
+            "content" => $this->content->process($player, $language)["content"],
             "buttons" => array_map(static function(Button $button) use ($player, $language) {
                 return $button->process($player, $language);
             }, $this->buttons)

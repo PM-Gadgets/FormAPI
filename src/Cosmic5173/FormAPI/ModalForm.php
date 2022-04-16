@@ -18,13 +18,6 @@ class ModalForm extends Form {
     private Button $button1;
     private Button $button2;
 
-    /**
-     * @param callable|null $callable
-     */
-    public function __construct(?callable $callable) {
-        parent::__construct($callable);
-    }
-
     public function processData(&$data) : void {
         if(!is_bool($data)) {
             throw new FormValidationException("Expected a boolean response, got " . gettype($data));
@@ -90,8 +83,8 @@ class ModalForm extends Form {
     public function processElements(Player $player, ?Language $language = null): ModalForm {
         $this->data = [
             "type" => "modal",
-            "title" => $this->title->process($player, $language),
-            "content" => $this->content->process($player, $language),
+            "title" => $this->title->process($player, $language)["title"],
+            "content" => $this->content->process($player, $language)["content"],
             "button1" => $this->button1->process($player, $language)["text"],
             "button2" => $this->button2->process($player, $language)["text"]
         ];
