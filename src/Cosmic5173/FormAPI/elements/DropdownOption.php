@@ -12,7 +12,7 @@ class DropdownOption extends Element implements Translatable {
     private string $translationKey;
     private string $fallbackText;
 
-    public function __construct(string $translationKey, string $fallbackText = "") {
+    public function __construct(string $translationKey = "", string $fallbackText = "") {
         $this->translationKey = $translationKey;
         $this->fallbackText = $fallbackText;
     }
@@ -46,7 +46,7 @@ class DropdownOption extends Element implements Translatable {
     }
 
     public function process(Player $player, ?Language $language = null): array {
-        $content = $language ? $language->translate($this->translationKey) : $this->fallbackText;
+        $content = $this->translationKey !== "" ? $language ? $language->translate($this->translationKey) : $this->fallbackText : $this->fallbackText;
 
         $tags = TagUtils::fetchTags($content);
         foreach ($tags as $tag) {
