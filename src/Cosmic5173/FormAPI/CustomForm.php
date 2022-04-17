@@ -113,7 +113,7 @@ class CustomForm extends Form {
     public function addDropdown(Dropdown $dropdown) : self {
         $this->elements[] = $dropdown;
         $this->labelMap[] = $dropdown->getLabel() ?? count($this->labelMap);
-        $this->validationMethods[] = static fn($v) => is_int($v) && isset($options[$v]);
+        $this->validationMethods[] = static fn($v) => is_int($v) && isset($dropdown->getDropdownOptions()[$v]);
         return $this;
     }
 
@@ -132,7 +132,7 @@ class CustomForm extends Form {
         $this->data = [
             "type" => "custom_form",
             "title" => $this->title->process($player, $language)["title"],
-            "content" => array_merge(...array_map(static fn($element) => $element->process($player, $language), $this->elements))
+            "content" => array_map(static fn($element) => $element->process($player, $language), $this->elements)
         ];
         return $this;
     }

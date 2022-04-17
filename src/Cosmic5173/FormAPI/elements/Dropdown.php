@@ -62,9 +62,9 @@ class Dropdown extends CustomFormElement implements Translatable {
         $content = [
             "type" => "dropdown",
             "text" => $language ? $language->translate($this->textTranslationKey) : $this->fallbackText,
-            "options" => array_merge(array_map(static function (DropdownOption $option) use ($player, $language) {
+            "options" => array_map(static function (DropdownOption $option) use ($player, $language) {
                 return $option->process($player, $language)[0];
-            }, $this->dropdownOptions)),
+            }, $this->dropdownOptions),
             "default" => $this->default
         ];
 
