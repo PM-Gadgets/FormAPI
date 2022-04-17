@@ -84,9 +84,11 @@ class SimpleForm extends Form {
         }
         for ($i = count($this->buttons) - 1; $i >= $index; $i--) {
             $this->buttons[$i + 1] = $this->buttons[$i];
+            $this->labelMap[$i + 1] = $this->labelMap[$i];
         }
 
         $this->buttons[$index] = $button;
+        $this->labelMap[$index] = $button->getLabel() ?? count($this->labelMap);
         return $this;
     }
 
